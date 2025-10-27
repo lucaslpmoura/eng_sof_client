@@ -24,6 +24,8 @@ class _MainPageState extends State<MainPage> {
 
   MainPageState state = MainPageState.LOADING;
 
+  BuildContext? currentContext;
+
   void updatePostList() {
     if(mounted){
          setState(() {
@@ -59,6 +61,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    currentContext = context;
+
     return Scaffold(
       body: body(),
       bottomNavigationBar: NavigationBar(
@@ -79,6 +84,29 @@ class _MainPageState extends State<MainPage> {
         onPressed: () => _openPostWindow(context),
         tooltip: 'New Post',
         child: Icon(Icons.post_add),
+      ),
+      appBar: AppBar(
+        title: const Text("The Social Network"),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(), 
+            icon: const Icon(Icons.menu), 
+          );
+        }),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text(
+                "Logout",
+              ),
+              onTap: () => _logout(),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -155,6 +183,13 @@ class _MainPageState extends State<MainPage> {
       );
     }
     return postList;
+  }
+
+  void _logout(){
+    client.token = '';
+    client.userId = '';
+
+    Navigator.of(currentContext!).pushReplacementNamed('loginPage');
   }
 }
 
