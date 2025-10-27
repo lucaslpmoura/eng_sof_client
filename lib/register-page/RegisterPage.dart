@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
+
+import 'package:eng_sof_client/utils/ReqClient.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eng_sof_client/constants/constants.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatelessWidget {
-  RegisterPage({super.key});
+  RegisterPage(this.client);
+
+  ReqClient client;
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -52,28 +56,19 @@ class RegisterPage extends StatelessWidget {
   }
 
   void register(BuildContext context) async{
-    var client = http.Client();
-    var uri = Uri.http(SERVER_ADDR, REGISTER_ENDPOINT);
+    var response = await client.register(usernameController.text, emailController.text, passwordController.text);
 
-    var response = await client.post(
-      uri, 
-      headers: <String,String> {'Content-Type': 'application/json'},
-      body: jsonEncode(<String,String>{
-        'username': usernameController.text,
-        'email': emailController.text, 
-        'password': passwordController.text}));
+    SnackBar snackBar = SnackBar(
+      content: Text(response.message + (response.ok ? ". Redirecting to Login Page..." : "")), 
+      duration: const Duration(seconds: 4), 
+      backgroundColor:  response.ok ? Colors.green : Colors.red
+    );
 
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-    var message = jsonDecode(response.body)['message'];
-
-    if(response.statusCode == 200){
-      var snackbar = SnackBar(content: Text(message + ". Returning to the main page."), duration: Duration(seconds: 3),); 
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      await Future.delayed(const Duration(seconds: 3));
+    if(response.ok){
+      Future.delayed(Duration(seconds: 3));
       Navigator.of(context).pushNamed('loginPage');
-    }else{
-      var snackbar = SnackBar(content: Text(message), duration: Duration(seconds: 4),); 
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
     }
   }
 

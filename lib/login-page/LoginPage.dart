@@ -1,12 +1,15 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
+
+import 'package:eng_sof_client/utils/ReqClient.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eng_sof_client/constants/constants.dart';
 
 class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+  LoginPage(this.client);
+
+  ReqClient client;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -29,7 +32,7 @@ class LoginPage extends StatelessWidget {
           ),
           Row(children: [
             ElevatedButton(
-            onPressed: () => login(),
+            onPressed: () => login(context),
             child: const Text('Login', textAlign: TextAlign.center)
             ),
             ElevatedButton(
@@ -44,15 +47,27 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void login() async{
-    var client = http.Client();
-    var uri = Uri.http(SERVER_ADDR, LOGIN_ENDPOINT);
+  void login(BuildContext context) async{
+    var response;
+    try{
+      response = await client.login(emailController.text, passwordController.text);
+    }catch(e){
+      response = ReqResponse(false, 500, "Couldn't communicate with server!");
+    }
+    
 
-    var response = await client.post(
-      uri, 
-      headers: <String,String> {'Content-Type': 'application/json'},
-      body: jsonEncode(<String,String>{'email': emailController.text, 'password': passwordController.text}));
-    print(response.body);
+    SnackBar snackBar = SnackBar(
+      content: Text(response.message), 
+      duration: const Duration(seconds: 4), 
+      backgroundColor:  response.ok ? Colors.green : Colors.red
+    );
+  
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    if(response.ok){
+      Future.delayed(Duration(seconds: 2));
+      Navigator.of(context).pushNamed('mainPage');
+    }
   }
 
 }
