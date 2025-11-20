@@ -1,12 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
-
 import 'package:eng_sof_client/utils/ReqClient.dart';
 import 'package:flutter/material.dart';
 
-import 'package:eng_sof_client/constants/constants.dart';
-import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatelessWidget {
   RegisterPage(this.client);

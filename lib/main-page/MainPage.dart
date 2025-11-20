@@ -27,41 +27,40 @@ class _MainPageState extends State<MainPage> {
   BuildContext? currentContext;
 
   void updatePostList() {
-    if(mounted){
-         setState(() {
-            state = MainPageState.LOADING;
-            posts = [];
-        });
+    if (mounted) {
+      setState(() {
+        state = MainPageState.LOADING;
+        posts = [];
+      });
     }
     try {
-        client.getPosts().then((response) async {
-            MainPageState newState;
-            List<Post> postList = [];
+      client.getPosts().then((response) async {
+        MainPageState newState;
+        List<Post> postList = [];
 
-            if (response.ok) {
-            newState = MainPageState.LOADED;
-            var posts = jsonDecode(jsonDecode(response.message))['posts'];
-            postList = await toPostList(posts);
-            } else {
-            newState = MainPageState.FAILED_TO_LOAD;
-            }
-
-            setState(() {
-            state = newState;
-            posts = postList;
-            });
-        });
-        } catch (exception) {
-        setState(() {
-            state = MainPageState.FAILED_TO_LOAD;
-            posts = [];
-        });
+        if (response.ok) {
+          newState = MainPageState.LOADED;
+          var posts = jsonDecode(jsonDecode(response.message))['posts'];
+          postList = await toPostList(posts);
+        } else {
+          newState = MainPageState.FAILED_TO_LOAD;
         }
+
+        setState(() {
+          state = newState;
+          posts = postList;
+        });
+      });
+    } catch (exception) {
+      setState(() {
+        state = MainPageState.FAILED_TO_LOAD;
+        posts = [];
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
     currentContext = context;
 
     return Scaffold(
@@ -80,19 +79,33 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openPostWindow(context),
-        tooltip: 'New Post',
-        child: Icon(Icons.post_add),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () => _openPostWindow(context),
+            tooltip: 'New Post',
+            child: Icon(Icons.post_add),
+          ),
+          SizedBox(height: 30,),
+          FloatingActionButton(
+            onPressed: () => updatePostList(),
+            tooltip: "Update Page",
+            child: Icon(Icons.update)
+          )
+        ],
       ),
+
       appBar: AppBar(
         title: const Text("The Social Network"),
-        leading: Builder(builder: (context) {
-          return IconButton(
-            onPressed: () => Scaffold.of(context).openDrawer(), 
-            icon: const Icon(Icons.menu), 
-          );
-        }),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              icon: const Icon(Icons.menu),
+            );
+          },
+        ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -100,11 +113,9 @@ class _MainPageState extends State<MainPage> {
           children: [
             ListTile(
               leading: Icon(Icons.logout),
-              title: Text(
-                "Logout",
-              ),
+              title: Text("Logout"),
               onTap: () => _logout(),
-            )
+            ),
           ],
         ),
       ),
@@ -166,7 +177,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Future<List<Post>> toPostList(dynamic list) async{
+  Future<List<Post>> toPostList(dynamic list) async {
     List<Post> postList = [];
     for (var item in list) {
       var response = await client.getUserInfo(item['author_id']);
@@ -178,14 +189,14 @@ class _MainPageState extends State<MainPage> {
           item['p_content'],
           userInfo['u_id'],
           userInfo['username'],
-          userInfo['email']
+          userInfo['email'],
         ),
       );
     }
     return postList;
   }
 
-  void _logout(){
+  void _logout() {
     client.token = '';
     client.userId = '';
 

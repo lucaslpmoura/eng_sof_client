@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'package:eng_sof_client/utils/ReqClient.dart';
 import 'package:flutter/material.dart';
 
-import 'package:eng_sof_client/constants/constants.dart';
-
 class LoginPage extends StatelessWidget {
   LoginPage(this.client);
 
