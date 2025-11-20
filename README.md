@@ -1,16 +1,43 @@
-# eng_sof_client
+# Front End – The Social Network
 
-A new Flutter project.
+Este projeto corresponde ao cliente web da plataforma **The Social Network**, desenvolvido em **Flutter** e servido por um servidor Node.js simples para distribuição de arquivos estáticos.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 📦 Dependências
 
-A few resources to get you started if this is your first Flutter project:
+Certifique-se de ter instalados:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Flutter** (versão compatível com Web)
+- **Node.js**
+- **npm**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## ▶️ Como rodar o projeto
+
+Siga os passos abaixo dentro da pasta do front end:
+
+### 1. Criar a estrutura inicial (caso ainda não exista)
+```bash
+flutter create .
+```
+
+### 2. Gerar o build web do Flutter
+```bash
+flutter build web
+```
+
+### 3. Instalar dependências Node
+```bash
+npm install
+```
+
+### 4. Iniciar o servidor web
+```bash
+node app.js
+```
+
+Por padrão, o servidor roda na porta HTTP (80).
+
+Feito por Lucas Moura, 2025.
