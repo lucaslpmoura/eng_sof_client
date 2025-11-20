@@ -41,7 +41,8 @@ class LoginPage extends StatelessWidget {
           )
           
         ]
-      )
+      ),
+      appBar: AppBar(title: const Text("Login to The Social Network"),),
     );
   }
 

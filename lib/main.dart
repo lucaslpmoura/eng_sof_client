@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Eng. Sof. - Social Network',
+      title: 'The Social Network',
       theme: ThemeData.dark().copyWith(
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white),

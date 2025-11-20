@@ -151,6 +151,7 @@ class _MainPageState extends State<MainPage> {
                   border: InputBorder.none,
                 ),
                 controller: postController,
+                style: const TextStyle(color: Colors.black),
               ),
             ),
           ),
@@ -161,6 +162,28 @@ class _MainPageState extends State<MainPage> {
             ),
             TextButton(
               onPressed: () {
+                if(postController.text.length > 1023){
+
+                  showDialog(context: context, builder: (context) {
+                    return AlertDialog(
+                      content: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 50,
+                          child: const Text("Post exceeds 1024 character limit.", style: const TextStyle(color: Colors.white),)
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Ok"),
+                        )
+                      ],
+                      );
+                  });
+                  return;
+
+                }
                 client.makePost(postController.text);
                 setState(() {
                   state = MainPageState.LOADING;

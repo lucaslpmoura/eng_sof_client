@@ -45,7 +45,8 @@ class RegisterPage extends StatelessWidget {
           )
           
         ]
-      )
+      ),
+      appBar: AppBar(title: const Text("Register a new Account"),),
     );
   }
 
